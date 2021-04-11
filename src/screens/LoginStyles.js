@@ -20,23 +20,26 @@ export const LoginFormBox = styled(LoginBox)`
     width: 100%;
     display: flex;
     flex-direction: column;
+  }
+`;
 
-    input {
-      padding: 10px 8px;
-      background-color: ${({ theme }) => theme.inputBgColor};
-      border: 1px solid lightgrey;
-      margin-top: 5px;
-      border-radius: 3px;
-      &::placeholder {
-        font-size: 0.8rem;
-      }
-    }
+export const FormInput = styled.input`
+  padding: 10px 8px;
+  background-color: ${({ theme }) => theme.inputBgColor};
+  border: ${({ isErrored }) => (isErrored ? '2px' : '1px')} solid
+    ${({ isErrored }) => (isErrored ? 'red' : 'lightgrey')};
+  margin-top: 5px;
+  border-radius: 3px;
+  &::placeholder {
+    font-size: 0.8rem;
   }
 `;
 
 export const LoginButton = styled.button`
   margin-top: 15px;
   background-color: #0095f6;
+  display: flex;
+  justify-content: center;
   color: white;
   border-radius: 3px;
   text-align: center;
@@ -47,6 +50,9 @@ export const LoginButton = styled.button`
   transition: all 0.2 ease;
   &:hover {
     background-color: #177dbf;
+  }
+  &:disabled {
+    background-color: lightgrey;
   }
 `;
 
