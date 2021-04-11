@@ -37,14 +37,14 @@ const SunIcon = styled(FontAwesomeIcon)`
   transition: all 0.3s ease;
   margin: 2px 0 0 5px;
   transform: ${props =>
-    props.darkTheme ? 'translateY(4px)' : 'translateY(100px)'};
+    props.darktheme ? 'translateY(4px)' : 'translateY(100px)'};
 `;
 
 const MoonIcon = styled(FontAwesomeIcon)`
   transition: all 0.3s ease;
   margin: 1px 0 0 5px;
   transform: ${props =>
-    props.darkTheme ? 'translateY(100px)' : 'translateY(-20px)'};
+    props.darktheme ? 'translateY(100px)' : 'translateY(-20px)'};
 `;
 
 const ThemeToggler = () => {
@@ -52,8 +52,18 @@ const ThemeToggler = () => {
   return (
     <ToggleContainer onClick={() => (theme ? darkMode(false) : darkMode(true))}>
       <Icons>
-        <SunIcon icon={faSun} size='3x' color='yellow' darkTheme={theme} />
-        <MoonIcon icon={faMoon} size='3x' color='yellow' darkTheme={theme} />
+        <SunIcon
+          icon={faSun}
+          size='3x'
+          color='yellow'
+          darktheme={theme.toString()}
+        />
+        <MoonIcon
+          icon={faMoon}
+          size='3x'
+          color='yellow'
+          darktheme={theme.toString()}
+        />
       </Icons>
     </ToggleContainer>
   );
