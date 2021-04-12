@@ -3,7 +3,7 @@ import { DefaultTheme } from 'styled-components';
 export const lightTheme: DefaultTheme = {
   background: '#F3F3F3',
   color: '#0D1117',
-  toggleBorder: '#FFF',
+  toggleBorder: 'lightgrey',
   gradient: 'linear-gradient(#091236, #1E215D)',
   darkTheme: false,
   logoColor: 'darkblue',
