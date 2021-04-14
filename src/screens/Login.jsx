@@ -3,7 +3,6 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import styled from 'styled-components';
 import ThemeToggler from '../reusable/ThemeToggler.jsx';
 import {
   FormInput,
@@ -34,7 +33,6 @@ const LOGIN_MUTATION = gql`
 
 const Login = () => {
   const location = useLocation();
-  console.log(location);
   const {
     register,
     getValues,
@@ -75,7 +73,6 @@ const Login = () => {
   };
   const clearLoginError = () => {
     clearErrors('login');
-    console.log(formState.errors);
   };
   return (
     <Container>
