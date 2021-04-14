@@ -11,6 +11,9 @@ import { UserAvatar } from './styles/Shared';
 
 const AppHeaderBar = styled(motion.header)`
   width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
   border-bottom: 1px solid ${({ theme }) => theme.toggleBorder};
   background-color: ${({ theme }) => theme.background};
   padding: 20px 0px;
