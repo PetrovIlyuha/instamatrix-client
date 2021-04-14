@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { DefaultTheme, StyledComponent } from 'styled-components';
-import { darkMode } from '../apollo';
+import { darkMode, disableDarkTheme, enableDarkTheme } from '../apollo';
 import {
   FontAwesomeIcon,
   FontAwesomeIconProps,
@@ -8,12 +8,12 @@ import {
 import { faSun } from '@fortawesome/free-regular-svg-icons';
 import { faMoon } from '@fortawesome/free-solid-svg-icons';
 import { useReactiveVar } from '@apollo/client';
+import { DARK_THEME } from '../constants';
 
 const ToggleContainer = styled.button`
-  position: absolute;
-  margin-bottom: -2rem;
-  right: 2vw;
-  top: 2vh;
+  position: fixed;
+  right: 1vw;
+  top: 1.6vh;
   background: ${({ theme }) => theme.gradient};
   border: 2px solid ${({ theme }) => theme.toggleBorder};
   border-radius: 12px;
@@ -35,35 +35,32 @@ const Icons = styled.div`
 
 const SunIcon = styled(FontAwesomeIcon)`
   transition: all 0.3s ease;
-  margin: 2px 0 0 5px;
+  margin: 2px 0 0 4px;
   transform: ${props =>
     props.darktheme ? 'translateY(4px)' : 'translateY(100px)'};
 `;
 
 const MoonIcon = styled(FontAwesomeIcon)`
   transition: all 0.3s ease;
-  margin: 1px 0 0 5px;
+  margin-left: 4px;
   transform: ${props =>
     props.darktheme ? 'translateY(100px)' : 'translateY(-20px)'};
 `;
 
 const ThemeToggler = () => {
   const theme = useReactiveVar(darkMode);
+  const toggleDarkMode = () => {
+    if (!theme) {
+      enableDarkTheme();
+    } else {
+      disableDarkTheme();
+    }
+  };
   return (
-    <ToggleContainer onClick={() => (theme ? darkMode(false) : darkMode(true))}>
+    <ToggleContainer onClick={toggleDarkMode}>
       <Icons>
-        <SunIcon
-          icon={faSun}
-          size='3x'
-          color='yellow'
-          darktheme={theme.toString()}
-        />
-        <MoonIcon
-          icon={faMoon}
-          size='3x'
-          color='yellow'
-          darktheme={theme.toString()}
-        />
+        <SunIcon icon={faSun} size='3x' color='yellow' darktheme={theme} />
+        <MoonIcon icon={faMoon} size='3x' color='yellow' darktheme={theme} />
       </Icons>
     </ToggleContainer>
   );
