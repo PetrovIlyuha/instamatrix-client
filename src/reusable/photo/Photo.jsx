@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   faBookmark,
   faComment,
@@ -19,12 +19,6 @@ import {
   PhotoLikes,
   LikedBy,
   LikeIcon,
-  Comments,
-  Comment,
-  CommentUsername,
-  CommentCaption,
-  CommentWord,
-  CommentCount,
 } from './PhotoStyles';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/client';
@@ -32,6 +26,7 @@ import { PHOTO_FEED_QUERY } from '../../screens/Home';
 import cogoToast from 'cogo-toast';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import CommentBlock from '../comments/CommentBlock';
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -42,10 +37,8 @@ const TOGGLE_LIKE_MUTATION = gql`
   }
 `;
 
-const Photo = ({ photo, comments, isMediumScreen, isLikedByMe, page }) => {
-  console.log('photo', photo, 'comments', comments);
+const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
   const [animateLikeButton, setAnimateLikeButton] = useState(false);
-  const [hashtagsPositions, setHashtagsPositions] = useState(null);
   const [observerRef, inView] = useInView({
     threshold: 0.2,
   });
@@ -70,19 +63,7 @@ const Photo = ({ photo, comments, isMediumScreen, isLikedByMe, page }) => {
       setAnimateLikeButton(true);
     }
   };
-  useEffect(() => {
-    if (photo) {
-      const hashTags = photo.hashtags.map(hash => hash.hashtag);
-      let hashTagsPositionsCalc = [];
-      hashTags.map(hashtag => {
-        let hashtagStartPos = photo.caption
-          .split(' ')
-          .findIndex(word => word === hashtag);
-        hashTagsPositionsCalc = [...hashTagsPositionsCalc, hashtagStartPos];
-      });
-      setHashtagsPositions({ positions: hashTagsPositionsCalc });
-    }
-  }, [photo]);
+
   return (
     <PhotoContainer
       ref={observerRef}
@@ -158,29 +139,7 @@ const Photo = ({ photo, comments, isMediumScreen, isLikedByMe, page }) => {
             </motion.h5>
           ) : null}
         </PhotoLikes>
-        <Comments>
-          <Comment>
-            <CommentUsername>{photo.user.username}</CommentUsername>
-            <CommentCaption>
-              {photo.caption.split(' ').map((word, wordIndex) => {
-                const isHashtag = hashtagsPositions?.positions?.includes(
-                  wordIndex,
-                );
-                return (
-                  <CommentWord key={wordIndex} isHashtag={isHashtag}>
-                    {' '}
-                    {word}{' '}
-                  </CommentWord>
-                );
-              })}
-            </CommentCaption>
-          </Comment>
-          <CommentCount>
-            {comments.length === 1
-              ? `${comments.length} comment`
-              : `${comments.length} comments`}
-          </CommentCount>
-        </Comments>
+        <CommentBlock photo={photo} />
       </PhotoData>
     </PhotoContainer>
   );
