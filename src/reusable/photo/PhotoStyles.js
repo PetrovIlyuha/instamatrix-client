@@ -85,6 +85,7 @@ export const Comments = styled.div`
 export const Comment = styled.div`
   display: flex;
   align-items: center;
+  margin: 0.3rem 0;
 `;
 
 export const CommentUsername = styled.span`
