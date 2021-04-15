@@ -10,36 +10,33 @@ import Photo from '../reusable/photo/Photo';
 export const PHOTO_FEED_QUERY = gql`
   query observePhotoFeed($page: Int!) {
     observePhotoFeed(page: $page) {
-      comments {
-        photo {
-          id
-        }
-        user {
-          username
-        }
+      id
+      user {
+        username
       }
-      photo {
-        id
-        file
-        isMyPhoto
-        isLikedByMe
-        caption
-        allLikes {
-          username
-          avatar
-        }
-        user {
-          username
-          avatar
-        }
-        hashtags {
-          hashtag
-        }
-        likesCount
+      file
+      caption
+      isMyPhoto
+      isLikedByMe
+      allLikes {
+        username
+        avatar
       }
+      user {
+        username
+        avatar
+      }
+      hashtags {
+        hashtag
+      }
+      likesCount
       comments {
         content
         createdByMe
+        user {
+          username
+          avatar
+        }
       }
     }
   }
@@ -54,14 +51,13 @@ const Home = () => {
     <PhotoFeedContainer size={isMediumScreen}>
       <Title title='Home' />
       <ThemeToggler />
-      {data?.observePhotoFeed?.map(photoWithComments => (
+      {data?.observePhotoFeed?.map(photo => (
         <Photo
           page={page}
-          photo={photoWithComments.photo}
-          comments={photoWithComments.comments}
-          key={photoWithComments.photo.id}
+          photo={photo}
+          key={photo.id}
           isMediumScreen={isMediumScreen}
-          isLikedByMe={photoWithComments.photo.isLikedByMe}
+          isLikedByMe={photo.isLikedByMe}
         />
       ))}
     </PhotoFeedContainer>
