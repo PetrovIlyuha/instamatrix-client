@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   faBookmark,
   faComment,
   faHeart,
   faPaperPlane,
-} from '@fortawesome/free-regular-svg-icons';
-import { faHeart as WasLikedHeartIcon } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { UserAvatar } from '../styles/Shared';
+} from "@fortawesome/free-regular-svg-icons";
+import { faHeart as WasLikedHeartIcon } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { UserAvatar } from "../styles/Shared";
 import {
   PhotoActions,
   PhotoActionsGroupLeft,
@@ -19,14 +19,14 @@ import {
   PhotoLikes,
   LikedBy,
   LikeIcon,
-} from './PhotoStyles';
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/client';
-import { PHOTO_FEED_QUERY } from '../../screens/Home';
-import cogoToast from 'cogo-toast';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import CommentBlock from '../comments/CommentBlock';
+} from "./PhotoStyles";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/client";
+import { PHOTO_FEED_QUERY } from "../../screens/Home";
+import cogoToast from "cogo-toast";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import CommentBlock from "../comments/CommentBlock";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -57,7 +57,7 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
 
   const toggleLike = () => {
     if (photo.isMyPhoto) {
-      cogoToast.error('I should not like your own photo!');
+      cogoToast.error("I should not like your own photo!");
       return;
     } else {
       setAnimateLikeButton(true);
@@ -68,13 +68,14 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
     <PhotoContainer
       ref={observerRef}
       animate={{ opacity: inView ? 1 : 0 }}
-      transition={{ duration: 0.2, delay: 0.05 }}>
+      transition={{ duration: 0.2, delay: 0.05 }}
+    >
       <PhotoHeader>
         <UserAvatar src={photo.user.avatar} />
         <span>{photo.user.username}</span>
       </PhotoHeader>
       <PhotoContent>
-        <img src={photo.file} alt='' />
+        <img src={photo.file} alt="" />
       </PhotoContent>
       <PhotoData>
         <PhotoActions>
@@ -83,7 +84,7 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
               <LikeIcon animate={animateLikeButton}>
                 <FontAwesomeIcon
                   icon={WasLikedHeartIcon}
-                  color='red'
+                  color="red"
                   onClick={toggleLike}
                 />
               </LikeIcon>
@@ -97,7 +98,7 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
           </PhotoActionsGroupLeft>
           <PhotoBookmark isMediumScreen={isMediumScreen}>
             <FontAwesomeIcon
-              size={isMediumScreen ? '1x' : '2x'}
+              size={isMediumScreen ? "1x" : "2x"}
               icon={faBookmark}
             />
           </PhotoBookmark>
@@ -108,7 +109,8 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
               <motion.span
                 initial={{ opacity: 0.6, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.2, delay: 0.1 }}>
+                transition={{ duration: 0.2, delay: 0.1 }}
+              >
                 Liked by
               </motion.span>
               <UserAvatar
@@ -124,7 +126,8 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
                 initial={{ opacity: 0.6, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.2, delay: 0.2 }}
-                style={{ color: 'grey' }}>
+                style={{ color: "grey" }}
+              >
                 Be the First to like...
               </motion.span>
             </LikedBy>
@@ -134,12 +137,13 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
               style={{ fontWeight: 600 }}
               initial={{ opacity: 0.6, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.2, delay: 0.1 }}>
+              transition={{ duration: 0.2, delay: 0.1 }}
+            >
               and {photo.likesCount - 1} more...
             </motion.h5>
           ) : null}
         </PhotoLikes>
-        <CommentBlock photo={photo} />
+        <CommentBlock photo={photo} page={page} />
       </PhotoData>
     </PhotoContainer>
   );

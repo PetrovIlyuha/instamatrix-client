@@ -1,7 +1,6 @@
-import { Comment, CommentCaption, CommentUsername } from '../photo/PhotoStyles';
+import { Comment, CommentCaption, CommentUsername } from "../photo/PhotoStyles";
 
 const SingleComment = ({ author, children }) => {
-  console.log(author);
   return (
     <Comment>
       <CommentUsername>{author.username}</CommentUsername>
