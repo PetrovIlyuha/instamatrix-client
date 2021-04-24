@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
-import styled from 'styled-components';
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 export const PhotoContainer = styled(motion.div)`
   width: 100%;
@@ -17,7 +18,7 @@ export const PhotoHeader = styled.div`
   width: 4rem;
   justify-content: space-between;
   span {
-    margin-left: 0.8rem;
+    margin-left: 0.9rem;
     font-weight: 600;
   }
 `;
@@ -41,20 +42,20 @@ export const PhotoActionsGroupLeft = styled.div`
   display: flex;
   justify-content: space-between;
   svg {
-    font-size: ${({ isMediumScreen }) => (isMediumScreen ? '18px' : '22px')};
+    font-size: ${({ isMediumScreen }) => (isMediumScreen ? "18px" : "22px")};
   }
 `;
 
 export const LikeIcon = styled.div`
   svg {
-    font-size: ${({ isMediumScreen }) => (isMediumScreen ? '18px' : '22px')};
-    transform: ${({ animate }) => (animate ? 'scale(1.3)' : 'scale(1)')};
+    font-size: ${({ isMediumScreen }) => (isMediumScreen ? "18px" : "22px")};
+    transform: ${({ animate }) => (animate ? "scale(1.3)" : "scale(1)")};
     transition: all 0.1s ease-in-out;
   }
 `;
 export const PhotoBookmark = styled.div`
   svg {
-    font-size: ${({ isMediumScreen }) => (isMediumScreen ? '18px' : '22px')};
+    font-size: ${({ isMediumScreen }) => (isMediumScreen ? "18px" : "22px")};
   }
 `;
 
@@ -82,7 +83,7 @@ export const Comments = styled.div`
   padding: 15px;
 `;
 
-export const Comment = styled.div`
+export const Comment = styled(motion.div)`
   display: flex;
   align-items: center;
   margin: 0.3rem 0;
@@ -95,13 +96,23 @@ export const CommentCaption = styled.span`
   margin-left: 1rem;
 `;
 
+export const CommentHashtagLink = styled(Link)`
+  color: ${(props) => props.theme.linkColor};
+  text-decoration: none;
+`;
+
 export const CommentWord = styled.span`
-  font-weight: ${({ isHashtag }) => (isHashtag ? '600' : '400')};
-  font-size: ${({ isHashtag }) => (isHashtag ? '16px' : '15px')};
+  font-weight: ${({ isHashtag }) => (isHashtag ? "600" : "400")};
+  font-size: ${({ isHashtag }) => (isHashtag ? "16px" : "15px")};
+  transition: all 0.2s ease;
+  &:hover {
+    color: ${({ isHashtag }) => (isHashtag ? "#6930c3" : "")};
+  }
 `;
 
 export const CommentCount = styled.div`
   opacity: 0.5;
   font-size: 12px;
-  margin-top: 1rem;
+  margin: 1rem 0;
+  cursor: pointer;
 `;

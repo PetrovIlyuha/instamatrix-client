@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import styled, { keyframes } from 'styled-components';
+import { motion } from "framer-motion";
+import styled, { keyframes } from "styled-components";
 
 export const Container = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ export const Container = styled.div`
 
 export const PhotoFeedContainer = styled.div`
   display: flex;
-  max-width: ${({ size }) => (size ? '600px' : '920px')};
+  max-width: ${({ size }) => (size ? "600px" : "920px")};
   margin: 0 auto;
   margin-top: 8rem;
   flex-direction: column;
@@ -39,8 +39,8 @@ export const Spinner = styled.div`
 `;
 
 export const UserAvatar = styled(motion.img)`
-  width: ${({ small }) => (small ? '1.4rem' : '2.1rem')};
-  height: ${({ small }) => (small ? '1.4rem' : '2.1rem')};
+  width: ${({ small }) => (small ? "1.4rem" : "2.1rem")};
+  height: ${({ small }) => (small ? "1.4rem" : "2.1rem")};
   border-radius: 50%;
   border: 1px solid lightgrey;
   padding: 0.1rem;
