@@ -27,10 +27,12 @@ const CREATE_COMMENT_MUTATION = gql`
 
 const CommentBlock = ({ photo, page }) => {
   const [activelyShownComments, setActivelyShownComments] = useState(
-    photo.comments.slice(0, 7).filter((_, i) => i % 2 !== 0)
+    photo.comments.slice(0, 3)
   );
-  const [_, setAllCommentsShown] = useState(false);
-  const [createCommentMutation, { loading, data }] = useMutation(
+  const [commentsRemaining, setCommentsRemaining] = useState(
+    photo.comments.slice(3).length
+  );
+  const [createCommentMutation, { loading }] = useMutation(
     CREATE_COMMENT_MUTATION,
     {
       refetchQueries: [{ query: PHOTO_FEED_QUERY, variables: { page } }],
@@ -47,9 +49,16 @@ const CommentBlock = ({ photo, page }) => {
     setValue("comment", getValues("comment") + emojiObject.emoji);
   };
 
-  const showAllComments = () => {
-    setActivelyShownComments(photo.comments);
-    setAllCommentsShown(true);
+  const showNextComments = () => {
+    let lastShownIndex = activelyShownComments.length;
+    setActivelyShownComments([
+      ...activelyShownComments,
+      ...photo.comments.slice(lastShownIndex, lastShownIndex + 3),
+    ]);
+    setCommentsRemaining(
+      (prev) =>
+        prev - photo.comments.slice(lastShownIndex, lastShownIndex + 3).length
+    );
   };
 
   const createComment = async () => {
@@ -97,8 +106,10 @@ const CommentBlock = ({ photo, page }) => {
           {photo.comments.length === 1 ? (
             `${photo.comments.length} comment`
           ) : photo.comments.length !== 0 ? (
-            <span style={{ marginBottom: 10 }} onClick={showAllComments}>
-              {`View all ${photo.comments.length} comments`}
+            <span style={{ marginBottom: 10 }} onClick={showNextComments}>
+              {`View next ${
+                commentsRemaining < 3 ? commentsRemaining : 3
+              } comments out of ${commentsRemaining} remaining`}
             </span>
           ) : (
             <span>No commments yet...</span>
@@ -106,7 +117,13 @@ const CommentBlock = ({ photo, page }) => {
         </CommentCount>
       )}
       {activelyShownComments?.map((comment, idx) => (
-        <SingleComment key={idx} author={comment.user}>
+        <SingleComment
+          initial={{ opacity: 0.3, x: 120 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+          key={idx}
+          author={comment.user}
+        >
           {comment.content.split(" ").map((word, idx) => {
             const isHashtag = word.startsWith("#");
             return isHashtag ? (
