@@ -1,14 +1,10 @@
-import React from 'react';
-import styled, { DefaultTheme, StyledComponent } from 'styled-components';
-import { darkMode, disableDarkTheme, enableDarkTheme } from '../apollo';
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconProps,
-} from '@fortawesome/react-fontawesome';
-import { faSun } from '@fortawesome/free-regular-svg-icons';
-import { faMoon } from '@fortawesome/free-solid-svg-icons';
-import { useReactiveVar } from '@apollo/client';
-import { DARK_THEME } from '../constants';
+import React from "react";
+import styled from "styled-components";
+import { darkMode, disableDarkTheme, enableDarkTheme } from "../apollo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSun } from "@fortawesome/free-regular-svg-icons";
+import { faMoon } from "@fortawesome/free-solid-svg-icons";
+import { useReactiveVar } from "@apollo/client";
 
 const ToggleContainer = styled.button`
   position: fixed;
@@ -36,15 +32,15 @@ const Icons = styled.div`
 const SunIcon = styled(FontAwesomeIcon)`
   transition: all 0.3s ease;
   margin: 2px 0 0 4px;
-  transform: ${props =>
-    props.darktheme ? 'translateY(4px)' : 'translateY(100px)'};
+  transform: ${(props) =>
+    props.darktheme ? "translateY(4px)" : "translateY(100px)"};
 `;
 
 const MoonIcon = styled(FontAwesomeIcon)`
   transition: all 0.3s ease;
   margin-left: 4px;
-  transform: ${props =>
-    props.darktheme ? 'translateY(100px)' : 'translateY(-20px)'};
+  transform: ${(props) =>
+    props.darktheme ? "translateY(100px)" : "translateY(-20px)"};
 `;
 
 const ThemeToggler = () => {
@@ -59,8 +55,8 @@ const ThemeToggler = () => {
   return (
     <ToggleContainer onClick={toggleDarkMode}>
       <Icons>
-        <SunIcon icon={faSun} size='3x' color='yellow' darktheme={theme} />
-        <MoonIcon icon={faMoon} size='3x' color='yellow' darktheme={theme} />
+        <SunIcon icon={faSun} size="3x" color="yellow" darktheme={theme} />
+        <MoonIcon icon={faMoon} size="3x" color="yellow" darktheme={theme} />
       </Icons>
     </ToggleContainer>
   );
