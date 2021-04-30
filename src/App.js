@@ -1,21 +1,22 @@
-import { ApolloProvider, useReactiveVar } from '@apollo/client';
-import React from 'react';
-import { HelmetProvider } from 'react-helmet-async';
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
+import React from "react";
+import { HelmetProvider } from "react-helmet-async";
 import {
   HashRouter as Router,
   Redirect,
   Route,
   Switch,
-} from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
-import client, { darkMode, loggedIn } from './apollo';
-import { GlobalStyles } from './GlobalStyles';
-import MediaQueries from './hooks/useQuery';
-import Header from './reusable/Header';
-import Home from './screens/Home';
-import Login from './screens/Login';
-import SignUp from './screens/SignUp';
-import { darkTheme, lightTheme } from './themes.ts';
+} from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+import client, { darkMode, loggedIn } from "./apollo";
+import { GlobalStyles } from "./GlobalStyles";
+import MediaQueries from "./hooks/useQuery";
+import Header from "./reusable/Header";
+import Home from "./screens/Home";
+import Login from "./screens/Login";
+import SignUp from "./screens/SignUp";
+import UserProfile from "./screens/UserProfile";
+import { darkTheme, lightTheme } from "./themes.ts";
 
 function App() {
   const isLogged = useReactiveVar(loggedIn);
@@ -29,14 +30,17 @@ function App() {
           <Router>
             <Header size={isMediumScreen} />
             <Switch>
-              <Route path='/' exact>
+              <Route path="/" exact>
                 {isLogged ? <Home /> : <Login />}
               </Route>
-              <Route path='/signup'>
+              <Route path={`/users/:username`}>
+                <UserProfile />
+              </Route>
+              <Route path="/signup">
                 <SignUp />
               </Route>
               <Route>
-                <Redirect to='/' />
+                <Redirect to="/" />
               </Route>
             </Switch>
           </Router>
