@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { useParams } from "react-router";
-import { useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { QUERY_USER_PROFILE } from "./apollo/queries";
 import ThemeToggler from "../reusable/ThemeToggler";
 import Title from "../reusable/Title";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faComment, faHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faComment as commentIconRegular,
+  faHeart as heartIconRegular,
+} from "@fortawesome/free-regular-svg-icons";
+import { TOGGLE_LIKE_MUTATION } from "../reusable/apollo/mutations";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 export const UserProfileContainer = styled.div`
   display: flex;
@@ -18,14 +24,7 @@ export const UserProfileContainer = styled.div`
   margin: 0 auto;
   margin-top: 100px;
   width: 100%;
-  align-items: start;
-`;
-
-const ProfileBtn = styled.button`
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: lightgrey;
-  border: 1px solid darkgrey;
+  align-items: flex-start;
 `;
 
 const ProfileDetails = styled.div`
@@ -62,10 +61,18 @@ const Username = styled.h2`
 `;
 
 const ProfileButton = styled.button`
-  padding: 0.35rem 1rem;
-  border-radius: 4px;
-  border: 1px solid grey;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: ${({ followed }) => (followed ? "orange" : "#e7e2e2")};
+  border: 1px solid darkgrey;
+  cursor: pointer;
   margin-left: 2rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in;
+  &:hover {
+    background: darkgrey;
+    color: white;
+  }
 `;
 
 const ProfileStats = styled.div`
@@ -87,11 +94,11 @@ const UserFullName = styled.h3`
 
 const ProfilePosts = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(100px, 1fr));
   width: 100%;
   grid-template-rows: 300px;
   gap: 2rem;
-  margin-top: 6rem;
+  margin: 6rem 2rem 0;
 `;
 
 const ProfilePhoto = styled.div`
@@ -122,40 +129,77 @@ const Icon = styled.div`
   width: 10%;
   justify-content: space-around;
   margin-left: 1rem;
+  svg {
+    color: white;
+    fill: white;
+  }
+`;
+
+const UNFOLLOW_USER_MUTATION = gql`
+  mutation unfollowUser($username: String!) {
+    unfollowUser(username: $username) {
+      ok
+      error
+    }
+  }
+`;
+
+const FOLLOW_USER_MUTATION = gql`
+  mutation followUser($username: String!) {
+    followUser(username: $username) {
+      ok
+      error
+    }
+  }
 `;
 
 const UserProfile = () => {
   const [showPhotoStats, setShowPhotoStats] = useState({ id: null });
   const { username } = useParams();
+  const userVisiting = useCurrentUser();
 
   const { data, loading } = useQuery(QUERY_USER_PROFILE, {
     variables: { username },
   });
-  const unfollowUser = (params) => {};
+  const [unfollow] = useMutation(UNFOLLOW_USER_MUTATION, {
+    variables: { username },
+    refetchQueries: [{ query: QUERY_USER_PROFILE, variables: { username } }],
+  });
+  const [follow] = useMutation(FOLLOW_USER_MUTATION, {
+    variables: { username },
+    refetchQueries: [{ query: QUERY_USER_PROFILE, variables: { username } }],
+  });
+  const [toggleLike] = useMutation(TOGGLE_LIKE_MUTATION, {
+    refetchQueries: [{ query: QUERY_USER_PROFILE, variables: { username } }],
+  });
+  const unfollowUser = () => {
+    unfollow();
+  };
 
-  const followUser = (params) => {};
+  const followUser = () => {
+    follow();
+  };
 
-  // console.log(data);
-  const getButton = (seeProfile) => {
-    const { isMyProfile, isFollowing } = seeProfile;
-    if (isMyProfile) {
-      return <ProfileBtn>Edit Profile</ProfileBtn>;
-    }
-    if (isFollowing) {
-      return <ProfileBtn onClick={unfollowUser}>Unfollow</ProfileBtn>;
-    } else {
-      return <ProfileBtn onClick={followUser}>Follow</ProfileBtn>;
-    }
+  const toggleLikeAction = (photoId) => {
+    toggleLike({ variables: { id: photoId } });
   };
 
   const buildProfileButton = (data) => {
     if (data?.isMyProfile) {
-      return "Edit Profile";
+      return { action: null, text: "Edit Profile" };
     } else if (data?.isFollowing) {
-      return "Unfollow";
+      return { action: unfollowUser, text: "Unfollow" };
     } else {
-      return "Follow";
+      return { action: followUser, text: "Follow" };
     }
+  };
+
+  const visitingUserCommentedPhoto = (comments) => {
+    return comments
+      .map((c) => c.user.id)
+      .some((id) => id === userVisiting.user.id)
+      ? faComment
+      : commentIconRegular;
   };
   return (
     <UserProfileContainer>
@@ -170,8 +214,11 @@ const UserProfile = () => {
         <UserProfileInfo>
           <ProfileInfoRow>
             <Username>{data?.seeProfile?.username}</Username>
-            <ProfileButton>
-              {buildProfileButton(data?.seeProfile)}
+            <ProfileButton
+              followed={data?.seeProfile?.isFollowing}
+              onClick={buildProfileButton(data?.seeProfile).action}
+            >
+              {buildProfileButton(data?.seeProfile).text}
             </ProfileButton>
           </ProfileInfoRow>
           <ProfileInfoRow>
@@ -208,11 +255,16 @@ const UserProfile = () => {
               {showPhotoStats?.id === photo.id && (
                 <ProfilePhotoIcons showIcons={showPhotoStats?.id === photo.id}>
                   <Icon>
-                    <FontAwesomeIcon icon={faHeart} />
+                    <FontAwesomeIcon
+                      icon={photo.isLikedByMe ? faHeart : heartIconRegular}
+                      onClick={() => toggleLikeAction(photo.id)}
+                    />
                     <span>{photo?.likesCount}</span>
                   </Icon>
                   <Icon>
-                    <FontAwesomeIcon icon={faComment} />
+                    <FontAwesomeIcon
+                      icon={visitingUserCommentedPhoto(photo?.comments)}
+                    />
                     <span>{photo?.comments.length}</span>
                   </Icon>
                 </ProfilePhotoIcons>
