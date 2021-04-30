@@ -1,57 +1,24 @@
-import React, { useState } from 'react';
-import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
-import { PhotoFeedContainer, UserAvatar } from '../reusable/styles/Shared';
-import ThemeToggler from '../reusable/ThemeToggler';
-import Title from '../reusable/Title';
-import MediaQueries from '../hooks/useQuery';
-import Photo from '../reusable/photo/Photo';
-
-export const PHOTO_FEED_QUERY = gql`
-  query observePhotoFeed($page: Int!) {
-    observePhotoFeed(page: $page) {
-      id
-      user {
-        username
-      }
-      file
-      caption
-      isMyPhoto
-      isLikedByMe
-      allLikes {
-        username
-        avatar
-      }
-      user {
-        username
-        avatar
-      }
-      hashtags {
-        hashtag
-      }
-      likesCount
-      comments {
-        content
-        createdByMe
-        user {
-          username
-          avatar
-        }
-      }
-    }
-  }
-`;
+import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
+import { PhotoFeedContainer } from "../reusable/styles/Shared";
+import ThemeToggler from "../reusable/ThemeToggler";
+import Title from "../reusable/Title";
+import MediaQueries from "../hooks/useQuery";
+import Photo from "../reusable/photo/Photo";
+import { PHOTO_FEED_QUERY } from "./apollo/queries";
 
 const Home = () => {
   const [page, setPage] = useState(1);
-  const { data } = useQuery(PHOTO_FEED_QUERY, { variables: { page } });
-  console.log(data);
+  const { data } = useQuery(PHOTO_FEED_QUERY, {
+    variables: { page },
+    pollInterval: 8000,
+  });
   const { isMediumScreen } = MediaQueries();
   return (
     <PhotoFeedContainer size={isMediumScreen}>
-      <Title title='Home' />
+      <Title title="Home" />
       <ThemeToggler />
-      {data?.observePhotoFeed?.map(photo => (
+      {data?.observePhotoFeed?.map((photo) => (
         <Photo
           page={page}
           photo={photo}

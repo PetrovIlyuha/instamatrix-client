@@ -21,6 +21,10 @@ export const PhotoHeader = styled.div`
     margin-left: 0.9rem;
     font-weight: 600;
   }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 
 export const PhotoContent = styled.div`
@@ -87,6 +91,10 @@ export const Comment = styled(motion.div)`
   display: flex;
   align-items: center;
   margin: 0.3rem 0;
+  a {
+    text-decoration: none;
+    color: black;
+  }
 `;
 
 export const CommentUsername = styled.span`
