@@ -1,6 +1,6 @@
-import 'styled-components';
+import "styled-components";
 
-declare module 'styled-components' {
+declare module "styled-components" {
   export interface DefaultTheme {
     background: string;
     color: string;
@@ -10,5 +10,6 @@ declare module 'styled-components' {
     logoColor: string;
     boxShadowColor: string;
     inputBgColor: string;
+    linkColor: string;
   }
 }

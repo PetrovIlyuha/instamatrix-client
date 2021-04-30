@@ -1,6 +1,6 @@
-import { gql, useQuery, useReactiveVar } from '@apollo/client';
-import { useEffect } from 'react';
-import { loggedIn, logUserOut } from '../apollo';
+import { gql, useQuery } from "@apollo/client";
+import { useEffect } from "react";
+import { loggedIn, logUserOut } from "../apollo";
 
 const CURRENT_USER_QUERY = gql`
   query myProfile {

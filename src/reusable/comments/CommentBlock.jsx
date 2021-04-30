@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Picker from "emoji-picker-react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -12,18 +12,9 @@ import SingleComment from "./SingleComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSmile } from "@fortawesome/free-regular-svg-icons";
 import cogoToast from "cogo-toast";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
-import { PHOTO_FEED_QUERY } from "../../screens/Home";
-
-const CREATE_COMMENT_MUTATION = gql`
-  mutation createComment($photoId: Int!, $content: String!) {
-    createComment(photoId: $photoId, content: $content) {
-      ok
-      error
-    }
-  }
-`;
+import { PHOTO_FEED_QUERY } from "../../screens/apollo/queries";
+import { CREATE_COMMENT_MUTATION } from "../../screens/apollo/mutations";
 
 const CommentBlock = ({ photo, page }) => {
   const [activelyShownComments, setActivelyShownComments] = useState(
@@ -74,6 +65,8 @@ const CommentBlock = ({ photo, page }) => {
           return;
         case "required":
           cogoToast.error("Comment is empty!");
+          return;
+        default:
           return;
       }
     } else {
