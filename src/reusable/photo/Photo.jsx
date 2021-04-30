@@ -20,22 +20,14 @@ import {
   LikedBy,
   LikeIcon,
 } from "./PhotoStyles";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
-import { PHOTO_FEED_QUERY } from "../../screens/Home";
 import cogoToast from "cogo-toast";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import CommentBlock from "../comments/CommentBlock";
-
-const TOGGLE_LIKE_MUTATION = gql`
-  mutation toggleLike($id: Int!) {
-    toggleLike(id: $id) {
-      ok
-      error
-    }
-  }
-`;
+import { Link } from "react-router-dom";
+import { PHOTO_FEED_QUERY } from "../../screens/apollo/queries";
+import { TOGGLE_LIKE_MUTATION } from "../apollo/mutations";
 
 const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
   const [animateLikeButton, setAnimateLikeButton] = useState(false);
@@ -53,7 +45,7 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
     setTimeout(() => {
       setAnimateLikeButton(false);
     }, 100);
-  }, [animateLikeButton]);
+  }, [animateLikeButton, toggleLikeMutaion, photo.id]);
 
   const toggleLike = () => {
     if (photo.isMyPhoto) {
@@ -71,8 +63,12 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
       transition={{ duration: 0.2, delay: 0.05 }}
     >
       <PhotoHeader>
-        <UserAvatar src={photo.user.avatar} />
-        <span>{photo.user.username}</span>
+        <Link to={`/users/${photo.user.username}`}>
+          <UserAvatar src={photo.user.avatar} />
+        </Link>
+        <Link to={`/users/${photo.user.username}`}>
+          <span>{photo.user.username}</span>
+        </Link>
       </PhotoHeader>
       <PhotoContent>
         <img src={photo.file} alt="" />
@@ -97,10 +93,7 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
             <FontAwesomeIcon icon={faPaperPlane} />
           </PhotoActionsGroupLeft>
           <PhotoBookmark isMediumScreen={isMediumScreen}>
-            <FontAwesomeIcon
-              size={isMediumScreen ? "1x" : "2x"}
-              icon={faBookmark}
-            />
+            <FontAwesomeIcon icon={faBookmark} />
           </PhotoBookmark>
         </PhotoActions>
         <PhotoLikes>
@@ -113,12 +106,14 @@ const Photo = ({ photo, isMediumScreen, isLikedByMe, page }) => {
               >
                 Liked by
               </motion.span>
-              <UserAvatar
-                initial={{ opacity: 0.6, scale: 0.8, x: 30 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
-                transition={{ duration: 0.2, delay: 0.1 }}
-                src={photo.allLikes[0].avatar}
-              />
+              <Link to={`/users/${photo.allLikes[0].username}`}>
+                <UserAvatar
+                  initial={{ opacity: 0.6, scale: 0.8, x: 30 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  transition={{ duration: 0.2, delay: 0.1 }}
+                  src={photo.allLikes[0].avatar}
+                />
+              </Link>
             </LikedBy>
           ) : (
             <LikedBy>
