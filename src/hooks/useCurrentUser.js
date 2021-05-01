@@ -5,6 +5,7 @@ import { loggedIn, logUserOut } from "../apollo";
 const CURRENT_USER_QUERY = gql`
   query myProfile {
     myProfile {
+      id
       username
       avatar
     }
