@@ -64,6 +64,8 @@ export const QUERY_USER_PROFILE = gql`
         file
         caption
         likesCount
+        isLikedByMe
+        isMyPhoto
         hashtags {
           id
           hashtag
@@ -72,6 +74,7 @@ export const QUERY_USER_PROFILE = gql`
           id
           content
           user {
+            id
             username
             avatar
           }
