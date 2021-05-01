@@ -13,6 +13,11 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { TOGGLE_LIKE_MUTATION } from "../reusable/apollo/mutations";
 import useCurrentUser from "../hooks/useCurrentUser";
+import cogoToast from "cogo-toast";
+import {
+  FOLLOW_USER_MUTATION,
+  UNFOLLOW_USER_MUTATION,
+} from "./apollo/mutations";
 
 export const UserProfileContainer = styled.div`
   display: flex;
@@ -135,24 +140,6 @@ const Icon = styled.div`
   }
 `;
 
-const UNFOLLOW_USER_MUTATION = gql`
-  mutation unfollowUser($username: String!) {
-    unfollowUser(username: $username) {
-      ok
-      error
-    }
-  }
-`;
-
-const FOLLOW_USER_MUTATION = gql`
-  mutation followUser($username: String!) {
-    followUser(username: $username) {
-      ok
-      error
-    }
-  }
-`;
-
 const UserProfile = () => {
   const [showPhotoStats, setShowPhotoStats] = useState({ id: null });
   const { username } = useParams();
@@ -180,8 +167,13 @@ const UserProfile = () => {
     follow();
   };
 
-  const toggleLikeAction = (photoId) => {
-    toggleLike({ variables: { id: photoId } });
+  const toggleLikeAction = (photo) => {
+    if (photo.isMyPhoto) {
+      cogoToast.error("This is your photo! 🤭");
+      return;
+    } else {
+      toggleLike({ variables: { id: photo.id } });
+    }
   };
 
   const buildProfileButton = (data) => {
@@ -257,7 +249,7 @@ const UserProfile = () => {
                   <Icon>
                     <FontAwesomeIcon
                       icon={photo.isLikedByMe ? faHeart : heartIconRegular}
-                      onClick={() => toggleLikeAction(photo.id)}
+                      onClick={() => toggleLikeAction(photo)}
                     />
                     <span>{photo?.likesCount}</span>
                   </Icon>
