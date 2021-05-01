@@ -98,6 +98,7 @@ export const Comment = styled(motion.div)`
 `;
 
 export const CommentUsername = styled.span`
+  color: ${({ theme }) => theme.linkColor};
   font-weight: 500;
 `;
 export const CommentCaption = styled.span`
@@ -105,8 +106,10 @@ export const CommentCaption = styled.span`
 `;
 
 export const CommentHashtagLink = styled(Link)`
-  color: ${(props) => props.theme.linkColor};
-  text-decoration: none;
+  span {
+    color: ${({ theme }) => theme.linkColor};
+    text-decoration: none;
+  }
 `;
 
 export const CommentWord = styled.span`
@@ -114,7 +117,8 @@ export const CommentWord = styled.span`
   font-size: ${({ isHashtag }) => (isHashtag ? "16px" : "15px")};
   transition: all 0.2s ease;
   &:hover {
-    color: ${({ isHashtag }) => (isHashtag ? "#6930c3" : "")};
+    color: ${({ theme, isHashtag }) =>
+      isHashtag ? "#6930c3" : theme.linkColor};
   }
 `;
 
